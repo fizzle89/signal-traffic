@@ -1,64 +1,126 @@
 <!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f4f6f3">
+<meta name="theme-color" content="#f7f5ef">
 <title>Signal Traffic - full agent-traffic report (your copy)</title>
 <meta name="description" content="Your full Signal Traffic report: unlimited log lines, every agent, CSV/JSON export and a printable report. Offline, single file - logs never leave your device.">
 <style>
-:root{--bg:#f4f6f3;--ink:#1b211c;--mut:#5c665e;--line:#dde3dc;--acc:#14532d;--acc2:#0e3b21;--card:#fff;--chip:#e7efe8}
-[data-theme="dark"]{--bg:#101512;--ink:#e8eee9;--mut:#9daba0;--line:#2a352d;--acc:#7dd3a8;--acc2:#0e3b21;--card:#18201b;--chip:#223329}
-*{box-sizing:border-box}body{margin:0;font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink)}
-main{max-width:900px;margin:0 auto;padding:36px 20px 80px}
-h1{font-size:29px;line-height:1.2;margin:0 0 10px}h2{font-size:19px;margin:34px 0 10px}p{margin:8px 0}.mut{color:var(--mut)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin:14px 0}
-button,.btn{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:10px 18px;font-size:15px;cursor:pointer;text-decoration:none;display:inline-block}
+:root{
+  --paper:#f7f5ef; --card:#fffdf8; --ink:#171a15; --mut:#60665c; --line:#e3ded0;
+  --acc:#0f6b3f; --acc-ink:#0d5a35; --navy:#1c2b23; --warn:#b3261e; --chip:#efeadd;
+}
+[data-theme="dark"]{
+  --paper:#12140f; --card:#1a1d16; --ink:#e9ece4; --mut:#9aa393; --line:#2e332a;
+  --acc:#7fd3a4; --acc-ink:#9fe0bd; --navy:#22332a; --warn:#e08a84; --chip:#242a20;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+::selection{background:var(--acc);color:#fff}
+main{max-width:880px;margin:0 auto;padding:28px 20px 72px}
+h1,h2,h3{font-family:Charter,Georgia,'Times New Roman',serif;line-height:1.15;color:var(--ink)}
+h1{font-size:40px;letter-spacing:-0.01em;margin:10px 0 14px}
+h2{font-size:21px;margin:40px 0 12px}
+p{margin:8px 0}.mut{color:var(--mut)}
+a{color:var(--acc)}
+code{background:var(--chip);padding:1px 5px;border-radius:4px;font-size:13px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.wordmark{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;letter-spacing:0.12em;font-weight:700}
+.wordmark a{color:var(--mut);text-decoration:none;font-weight:400;letter-spacing:0.02em}
+.wordmark a:hover{color:var(--acc)}
+#toggle{background:transparent;color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+#toggle:hover{color:var(--ink);border-color:var(--mut)}
+.eyebrow{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;letter-spacing:0.14em;color:var(--acc);margin-top:36px}
+.standfirst{font-size:18px;line-height:1.5;color:var(--mut);max-width:640px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin:14px 0}
+.contract{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0;overflow:hidden}
+.contract>div{padding:18px 20px}
+.contract>div:first-child{border-right:1px solid var(--line)}
+.contract h3{font-size:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:0.1em;margin:0 0 8px}
+.contract h3.does{color:var(--acc)}.contract h3.not{color:var(--warn)}
+.contract p{font-size:15px;margin:0}
+button,.btn{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:11px 20px;font-size:15px;cursor:pointer;text-decoration:none;display:inline-block;font-weight:600}
+button:hover,.btn:hover{background:var(--acc-ink)}
 [data-theme="dark"] button,[data-theme="dark"] .btn{color:#0b120d}
-button:disabled{opacity:.5;cursor:default}.ghost{background:transparent;color:var(--acc);border:1px solid var(--acc)}
-textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:8px;padding:10px;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--card);color:var(--ink)}
-input[type=file]{display:block;margin:6px 0 12px;font-size:14px}
-table{border-collapse:collapse;width:100%;min-width:540px;font-size:14px;margin:10px 0}
-.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
-td,th{overflow-wrap:anywhere}
-th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}th{background:var(--chip)}
-code{background:var(--chip);padding:1px 5px;border-radius:4px;font-size:13px}
-ul{padding-left:20px}li{margin:4px 0}
-.pro{background:var(--acc2);color:#eaf3ee;border-radius:10px;padding:22px;margin-top:30px}
-.pro h2{color:#fff;margin-top:0}.pro .btn{background:#fff;color:var(--acc2)}
-.pro a{color:#cfe9db}
-.cat{display:inline-block;background:var(--chip);border-radius:6px;padding:2px 8px;font-size:12px;font-weight:600;margin-right:6px}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.topbar .brand{font-size:13px;color:var(--mut)}
-.topbar .brand a{color:var(--mut)}
-#toggle{background:transparent;color:var(--mut);border:1px solid var(--line);padding:6px 12px;font-size:13px}
-.err{color:#b3261e;font-size:13px}
-@media print{.noprint{display:none}body{background:#fff;color:#000}}
-</style></head><body><main>
-<div class="topbar noprint"><span class="brand">Signal Traffic by <a href="https://fizzle89.github.io/">Shuttlewright</a></span><button id="toggle">dark / light</button></div>
+button:focus-visible,.btn:focus-visible,#toggle:focus-visible,a:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+button:disabled{opacity:.5;cursor:default}
+.ghost{background:transparent;color:var(--acc);border:1px solid var(--acc)}
+.ghost:hover{background:transparent;color:var(--acc-ink);border-color:var(--acc-ink)}
+.dropzone{border:1.5px dashed var(--line);border-radius:10px;padding:18px;background:var(--card)}
+.dropzone label{font-weight:600;font-size:14px;display:block}
+input[type=file]{display:block;margin:8px 0 12px;font-size:14px;color:var(--mut)}
+textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:8px;padding:10px;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--paper);color:var(--ink)}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:8px;margin:10px 0}
+table{border-collapse:collapse;width:100%;min-width:540px;font-size:14px;margin:0}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+th{background:var(--chip);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;letter-spacing:0.06em;font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+ul{padding-left:20px}li{margin:5px 0}
+.report-head{border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:8px}
+.report-head .big{font-family:Charter,Georgia,serif;font-size:26px;font-weight:700}
+.catline{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--line);margin-top:26px;padding-bottom:6px}
+.catline h3{font-size:17px;margin:0}
+.catline .mut{font-size:13px}
+.pro{background:var(--navy);color:#e8f0ea;border-radius:10px;padding:26px;margin-top:32px}
+.pro h2{color:#fff;margin-top:0}
+.pro .btn{background:#fff;color:var(--navy)}
+.pro .btn:hover{background:#e8f0ea}
+.pro a{color:#bfe3cd}
+.upsell{background:var(--card)}
+.upsell h2{margin-top:0}
+.foot{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--mut)}
+.err{color:var(--warn);font-size:13px}
+#results>div{animation:appear .25s ease-out}
+@keyframes appear{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){
+  #results>div{animation:none}
+}
+@media (max-width:640px){
+  h1{font-size:30px}
+  table{min-width:440px;font-size:13px}
+  th,td{padding:8px 9px}
+  th:first-child,td:first-child{min-width:100px}
+  .contract{grid-template-columns:1fr}
+  .contract>div:first-child{border-right:0;border-bottom:1px solid var(--line)}
+  .standfirst{font-size:16px}
+}
+@media print{.noprint{display:none}body{background:#fff;color:#000}#results>div{animation:none}}
+</style></head><body>
+<header class="topbar noprint" style="max-width:880px;margin:0 auto;padding:20px 20px 0">
+  <div class="wordmark">SIGNAL TRAFFIC <a href="https://fizzle89.github.io/">by Shuttlewright</a></div>
+  <button id="toggle" aria-label="Switch between dark and light theme">dark / light</button>
+</header>
+<main>
+<p class="eyebrow">SERVER LOGS IN &rarr; ANSWERS OUT</p>
 <h1>Which AI agents are hitting your site - and what are they reading?</h1>
-<p class="mut">Upload the server logs you already have. Signal Traffic reads them in your browser and shows you every AI crawler and agent that visited: GPTBot, ClaudeBot, PerplexityBot, OAI-SearchBot and 30+ more - with the exact pages each one read.</p>
-<div class="card">
-<p><b>What it does:</b> parses Apache, nginx and most JSON log formats line by line, matches each request against a database of known AI and search crawlers, and builds a report: hits per agent, pages read, status codes, first and last visit.</p>
-<p><b>What it does not do:</b> upload your logs anywhere, connect to your server, or guess. It reads only the log lines you give it, in this tab. If a visitor is not in the log, it is not in the report. Close the tab and nothing is kept.</p>
+<p class="standfirst">Upload the server logs you already have. Signal Traffic reads them in your browser and shows you every AI crawler and agent that visited: GPTBot, ClaudeBot, PerplexityBot, OAI-SearchBot and 30+ more - with the exact pages each one read.</p>
+<div class="card contract" role="region" aria-label="What Signal Traffic does and does not do">
+<div><h3 class="does">WHAT IT DOES</h3>
+<p>parses Apache, nginx and most JSON log formats line by line, matches each request against a database of known AI and search crawlers, and builds a report: hits per agent, pages read, status codes, first and last visit.</p></div>
+<div><h3 class="not">WHAT IT DOES NOT DO</h3>
+<p>upload your logs anywhere, connect to your server, or guess. It reads only the log lines you give it, in this tab. If a visitor is not in the log, it is not in the report. Close the tab and nothing is kept.</p></div>
 </div>
 <h2 class="noprint">1. Your logs</h2>
-<div class="card noprint">
-<label style="font-weight:600;font-size:14px">Upload a log file (.log or .txt)</label>
+<div class="dropzone noprint">
+<label for="fLog">Upload a log file (.log or .txt)</label>
 <input type="file" id="fLog" accept=".log,.txt,.json,.csv,text/plain">
-<p class="mut" style="font-size:13px;margin:2px 0 10px">No limits: load the whole log.</p>
-<label style="font-weight:600;font-size:14px">or paste log lines</label>
+<p class="mut" style="font-size:13px;margin:2px 0 12px">No limits: load the whole log.</p>
+<label for="tLog">or paste log lines</label>
 <textarea id="tLog" placeholder='66.249.72.1 - - [24/Oct/2026:10:01:00 +0000] "GET /pricing HTTP/1.1" 200 5123 "-" "Mozilla/5.0 (compatible; GPTBot/1.2)"'></textarea>
-<p style="margin-top:12px"><button id="run">Build the report</button>
+<p style="margin-top:14px"><button id="run">Build the report</button>
 </p>
 <p class="mut" style="font-size:13px">No logs handy? Any of these work: <code>/var/log/nginx/access.log</code>, Apache <code>access_log</code>, or a JSON log export (Cloudflare, Vercel, AWS). One line per visit.</p>
 </div>
 <h2>2. Your agent-traffic report</h2>
-<div id="results"><div class="card"><p class="mut">Nothing run yet. Give it a log and build the report.</p></div></div>
+<div id="results" aria-live="polite"><div class="card"><p class="mut">Nothing run yet. Give it a log and build the report.</p></div></div>
 <p class="mut" style="font-size:14px;background:var(--chip);border-radius:8px;padding:12px">This is your paid full-report copy. Save this file and keep the link private. It works offline, forever.</p>
-<div class="card" style="margin-top:30px">
-<h2 style="margin-top:0">Want this watched for you, every day?</h2>
+<div class="card upsell" style="margin-top:30px">
+<h2>Want this watched for you, every day?</h2>
 <p>Signal Traffic reads the logs you bring it, once. <b>Signal Watch</b> keeps an eye on your AI visibility continuously - what changed, what broke, what the crawlers stopped seeing - and flags it before a customer does.</p>
-<p><a class="btn" style="background:var(--acc)" href="https://shuttlewright-ai-monitoring.pages.dev/">See Signal Watch - $290/mo</a></p>
-<p class="mut" style="font-size:13px">Also in the family: <a style="color:var(--acc)" href="https://shuttlewright-ai-visibility-checker.pillar-3a8.workers.dev/">Signal Check</a> - is your site technically ready for AI search? Free scan, $19/mo.</p>
+<p><a class="btn" href="https://shuttlewright-ai-monitoring.pages.dev/">See Signal Watch - $290/mo</a></p>
+<p class="mut" style="font-size:13px">Also in the family: <a href="https://shuttlewright-ai-visibility-checker.pillar-3a8.workers.dev/">Signal Check</a> - is your site technically ready for AI search? Free scan, $19/mo.</p>
 </div>
-<p class="mut" style="font-size:13px;margin-top:30px">Signal Traffic reads log lines only. It connects to nothing, uploads nothing, and stores nothing on any server. The bot database covers the well-known AI and search crawlers as of October 2026; a brand-new crawler with an unknown user-agent shows up under "unclassified bot" only if its agent string says it is one. Questions: fuseini.metadata@gmail.com</p>
+<footer class="foot noprint">Signal Traffic reads log lines only. It connects to nothing, uploads nothing, and stores nothing on any server. The bot database covers the well-known AI and search crawlers as of October 2026; a brand-new crawler with an unknown user-agent shows up under "unclassified bot" only if its agent string says it is one. Questions: fuseini.metadata@gmail.com</footer>
 </main>
 <script>
 // Signal Traffic bot database - user-agent substring matching.
@@ -204,6 +266,7 @@ const $ = id => document.getElementById(id);
 const theme = localStorage.getItem('st-theme'); if(theme) document.documentElement.dataset.theme = theme;
 $('toggle').addEventListener('click',()=>{ const d=document.documentElement; d.dataset.theme = d.dataset.theme==='dark'?'light':'dark'; localStorage.setItem('st-theme', d.dataset.theme); });
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function wbrName(s){return esc(s).replace(/([a-z])([A-Z])/g,'$1<wbr>$2').replace(/([A-Z]+)([A-Z][a-z])/g,'$1<wbr>$2');}
 function readFile(input){ return new Promise((res,rej)=>{ const f=input.files[0]; if(!f){res(null);return;} const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsText(f); }); }
 function buildReport(text){
   let note = '';
@@ -222,31 +285,32 @@ function render(a, parsed, note){
   if(parsed.unparsed) h+='<p class="err">'+parsed.unparsed+' line(s) could not be read and were skipped.</p>';
   if(a.total===0){ el.innerHTML='<div class="card"><p class="err">No log lines found. Check the format: one visit per line, Apache/nginx combined or JSON.</p></div>'; return; }
   h+='<div class="card">';
-  if(note) h+='<p class="mut" style="font-size:13px">'+esc(note)+ (PRO?'':'<a href="__CHECKOUT_URL__" style="color:var(--acc)">The full report has no limit.</a>')+'</p>';
-  h+='<p><b>'+a.total+'</b> requests read. <b>'+a.botHits+'</b> of them ('+(a.total?Math.round(a.botHits/a.total*100):0)+'%) came from <b>'+a.bots.length+'</b> known AI or search agents.</p>';
+  h+='<div class="report-head">';
+  if(note) h+='<p class="mut" style="font-size:13px;margin-bottom:8px">'+esc(note)+ (PRO?'':'<a href="https://buy.polar.sh/polar_cl_uLn8uQAk8PGQAs6fKrqtOyT92LoXGdQa1Hm0F2Inrfw">The full report has no limit.</a>')+'</p>';
+  h+='<p class="big">'+a.botHits+' agent visits <span class="mut" style="font-size:16px;font-weight:400">out of '+a.total+' requests ('+(a.total?Math.round(a.botHits/a.total*100):0)+'%) - '+a.bots.length+' known AI or search agents</span></p></div>';
   if(!a.bots.length){
-    h+='<p>No known AI or search crawlers in this log. Either none visited in the window this log covers, or they identify differently. Signal Check can tell you whether your site is even letting them in: <a style="color:var(--acc)" href="https://shuttlewright-ai-visibility-checker.pillar-3a8.workers.dev/">run the free scan</a>.</p>';
+    h+='<p>No known AI or search crawlers in this log. Either none visited in the window this log covers, or they identify differently. Signal Check can tell you whether your site is even letting them in: <a href="https://shuttlewright-ai-visibility-checker.pillar-3a8.workers.dev/">run the free scan</a>.</p>';
   } else {
     const cats = ["ai-agent","ai-training","search","seo","other"];
     cats.forEach(cat=>{
       const list = a.byCat[cat]; if(!list) return;
       const showN = PRO ? list.length : Math.min(list.length, 5);
-      h+='<h2 style="margin-top:22px">'+esc(SIGNAL_CAT_LABELS[cat]||cat)+' <span class="mut" style="font-weight:400;font-size:14px">'+list.reduce((s,b)=>s+b.hits,0)+' hits</span></h2>';
+      h+='<div class="catline"><h3>'+esc(SIGNAL_CAT_LABELS[cat]||cat)+'</h3><span class="mut">'+list.reduce((s,b)=>s+b.hits,0)+' hits</span></div>';
       h+='<div class="tw"><table><tr><th>Agent</th><th>Hits</th><th>Most-read pages</th><th>Status codes</th><th>Seen</th></tr>';
       list.slice(0, showN).forEach(b=>{
         const tp = a.top(b.paths, PRO?10:5).map(p=>'<code>'+esc(p[0])+'</code> &times;'+p[1]).join('<br>');
         const seen = (b.first? esc(b.first):'?')+' &rarr; '+(b.last?esc(b.last):'?');
-        h+='<tr><td><b>'+esc(b.name)+'</b><br><span class="mut" style="font-size:12px">'+esc(b.sampleUA).slice(0,90)+'</span></td><td>'+b.hits+'</td><td>'+tp+'</td><td>'+statusMix(b.statuses)+'</td><td style="font-size:12px">'+seen+'</td></tr>';
+        h+='<tr><td><b>'+wbrName(b.name)+'</b><br><span class="mut" style="font-size:12px">'+esc(b.sampleUA).slice(0,90)+'</span></td><td>'+b.hits+'</td><td>'+tp+'</td><td>'+statusMix(b.statuses)+'</td><td style="font-size:12px">'+seen+'</td></tr>';
       });
       h+='</table></div>';
       if(!PRO && list.length > showN) h+='<p class="mut" style="font-size:13px">+ '+(list.length-showN)+' more in the full report.</p>';
     });
-    h+='<h2 style="margin-top:22px">The pages agents read most</h2><div class="tw"><table><tr><th>Page</th><th>Agent hits</th></tr>';
+    h+='<div class="catline"><h3>The pages agents read most</h3></div><div class="tw"><table><tr><th>Page</th><th>Agent hits</th></tr>';
     a.topPaths.slice(0, PRO?25:10).forEach(p=>{ h+='<tr><td><code>'+esc(p[0])+'</code></td><td>'+p[1]+'</td></tr>'; });
     h+='</table></div>';
     if(!PRO && a.topPaths.length > 10) h+='<p class="mut" style="font-size:13px">+ '+(a.topPaths.length-10)+' more pages in the full report.</p>';
   }
-  h+='<p class="mut" style="font-size:13px">This report shows what your logs record. It does not estimate traffic your server never saw.</p></div>';
+  h+='<p class="mut" style="font-size:13px;margin-top:14px">This report shows what your logs record. It does not estimate traffic your server never saw.</p></div>';
   if(PRO){
     h+='<div class="card noprint"><p><button id="csv">Export agent table (CSV)</button> <button class="ghost" id="json">Export full data (JSON)</button> <button class="ghost" onclick="window.print()">Print / save as PDF</button></p><p class="mut" style="font-size:13px">The printed page is the report you can send to your team or your board.</p></div>';
   }
