@@ -1,0 +1,11 @@
+name = "shuttlewright-signal-attr"
+main = "index.mjs"
+compatibility_date = "2026-10-24"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "signal-traffic-attr"
+# database_id filled at deploy time (wrangler d1 create signal-traffic-attr)
+
+# Secrets (wrangler secret put ...): POLAR_WEBHOOK_SECRET, POLAR_API_TOKEN,
+# TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, ATTR_READ_KEY
