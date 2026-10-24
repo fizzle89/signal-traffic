@@ -1,0 +1,273 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f4f6f3">
+<title>Signal Traffic - full agent-traffic report (your copy)</title>
+<meta name="description" content="Your full Signal Traffic report: unlimited log lines, every agent, CSV/JSON export and a printable report. Offline, single file - logs never leave your device.">
+<style>
+:root{--bg:#f4f6f3;--ink:#1b211c;--mut:#5c665e;--line:#dde3dc;--acc:#14532d;--acc2:#0e3b21;--card:#fff;--chip:#e7efe8}
+[data-theme="dark"]{--bg:#101512;--ink:#e8eee9;--mut:#9daba0;--line:#2a352d;--acc:#7dd3a8;--acc2:#0e3b21;--card:#18201b;--chip:#223329}
+*{box-sizing:border-box}body{margin:0;font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+main{max-width:900px;margin:0 auto;padding:36px 20px 80px}
+h1{font-size:29px;line-height:1.2;margin:0 0 10px}h2{font-size:19px;margin:34px 0 10px}p{margin:8px 0}.mut{color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin:14px 0}
+button,.btn{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:10px 18px;font-size:15px;cursor:pointer;text-decoration:none;display:inline-block}
+[data-theme="dark"] button,[data-theme="dark"] .btn{color:#0b120d}
+button:disabled{opacity:.5;cursor:default}.ghost{background:transparent;color:var(--acc);border:1px solid var(--acc)}
+textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:8px;padding:10px;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--card);color:var(--ink)}
+input[type=file]{display:block;margin:6px 0 12px;font-size:14px}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}th{background:var(--chip)}
+code{background:var(--chip);padding:1px 5px;border-radius:4px;font-size:13px}
+ul{padding-left:20px}li{margin:4px 0}
+.pro{background:var(--acc2);color:#eaf3ee;border-radius:10px;padding:22px;margin-top:30px}
+.pro h2{color:#fff;margin-top:0}.pro .btn{background:#fff;color:var(--acc2)}
+.pro a{color:#cfe9db}
+.cat{display:inline-block;background:var(--chip);border-radius:6px;padding:2px 8px;font-size:12px;font-weight:600;margin-right:6px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.topbar .brand{font-size:13px;color:var(--mut)}
+.topbar .brand a{color:var(--mut)}
+#toggle{background:transparent;color:var(--mut);border:1px solid var(--line);padding:6px 12px;font-size:13px}
+.err{color:#b3261e;font-size:13px}
+@media print{.noprint{display:none}body{background:#fff;color:#000}}
+</style></head><body><main>
+<div class="topbar noprint"><span class="brand">Signal Traffic by <a href="https://fizzle89.github.io/">Shuttlewright</a></span><button id="toggle">dark / light</button></div>
+<h1>Which AI agents are hitting your site - and what are they reading?</h1>
+<p class="mut">Upload the server logs you already have. Signal Traffic reads them in your browser and shows you every AI crawler and agent that visited: GPTBot, ClaudeBot, PerplexityBot, OAI-SearchBot and 30+ more - with the exact pages each one read.</p>
+<div class="card">
+<p><b>What it does:</b> parses Apache, nginx and most JSON log formats line by line, matches each request against a database of known AI and search crawlers, and builds a report: hits per agent, pages read, status codes, first and last visit.</p>
+<p><b>What it does not do:</b> upload your logs anywhere, connect to your server, or guess. It reads only the log lines you give it, in this tab. If a visitor is not in the log, it is not in the report. Close the tab and nothing is kept.</p>
+</div>
+<h2 class="noprint">1. Your logs</h2>
+<div class="card noprint">
+<label style="font-weight:600;font-size:14px">Upload a log file (.log or .txt)</label>
+<input type="file" id="fLog" accept=".log,.txt,.json,.csv,text/plain">
+<p class="mut" style="font-size:13px;margin:2px 0 10px">No limits: load the whole log.</p>
+<label style="font-weight:600;font-size:14px">or paste log lines</label>
+<textarea id="tLog" placeholder='66.249.72.1 - - [24/Oct/2026:10:01:00 +0000] "GET /pricing HTTP/1.1" 200 5123 "-" "Mozilla/5.0 (compatible; GPTBot/1.2)"'></textarea>
+<p style="margin-top:12px"><button id="run">Build the report</button>
+</p>
+<p class="mut" style="font-size:13px">No logs handy? Any of these work: <code>/var/log/nginx/access.log</code>, Apache <code>access_log</code>, or a JSON log export (Cloudflare, Vercel, AWS). One line per visit.</p>
+</div>
+<h2>2. Your agent-traffic report</h2>
+<div id="results"><div class="card"><p class="mut">Nothing run yet. Give it a log and build the report.</p></div></div>
+<p class="mut" style="font-size:14px;background:var(--chip);border-radius:8px;padding:12px">This is your paid full-report copy. Save this file and keep the link private. It works offline, forever.</p>
+<div class="card" style="margin-top:30px">
+<h2 style="margin-top:0">Want this watched for you, every day?</h2>
+<p>Signal Traffic reads the logs you bring it, once. <b>Signal Watch</b> keeps an eye on your AI visibility continuously - what changed, what broke, what the crawlers stopped seeing - and flags it before a customer does.</p>
+<p><a class="btn" style="background:var(--acc)" href="https://shuttlewright-ai-monitoring.pages.dev/">See Signal Watch - $290/mo</a></p>
+<p class="mut" style="font-size:13px">Also in the family: <a style="color:var(--acc)" href="https://shuttlewright-ai-visibility-checker.pillar-3a8.workers.dev/">Signal Check</a> - is your site technically ready for AI search? Free scan, $19/mo.</p>
+</div>
+<p class="mut" style="font-size:13px;margin-top:30px">Signal Traffic reads log lines only. It connects to nothing, uploads nothing, and stores nothing on any server. The bot database covers the well-known AI and search crawlers as of October 2026; a brand-new crawler with an unknown user-agent shows up under "unclassified bot" only if its agent string says it is one. Questions: fuseini.metadata@gmail.com</p>
+</main>
+<script>
+// Signal Traffic bot database - user-agent substring matching.
+// Categories: ai-training, ai-agent (search/answer assistants acting for a user), search, seo, other.
+// Only real crawler UAs. Google-Extended / Applebot-Extended are robots.txt tokens, not UAs, so they are not here.
+var SIGNAL_BOTS = [
+  // AI training crawlers
+  {m:"GPTBot", name:"GPTBot (OpenAI training)", cat:"ai-training"},
+  {m:"ClaudeBot", name:"ClaudeBot (Anthropic training)", cat:"ai-training"},
+  {m:"CCBot", name:"CCBot (Common Crawl)", cat:"ai-training"},
+  {m:"Bytespider", name:"Bytespider (ByteDance)", cat:"ai-training"},
+  {m:"Amazonbot", name:"Amazonbot", cat:"ai-training"},
+  {m:"Applebot", name:"Applebot (Apple)", cat:"ai-training"},
+  {m:"Meta-ExternalAgent", name:"Meta-ExternalAgent (Meta AI)", cat:"ai-training"},
+  {m:"cohere-training-data-crawler", name:"Cohere training crawler", cat:"ai-training"},
+  {m:"AI2Bot", name:"AI2Bot (Allen Institute)", cat:"ai-training"},
+  {m:"Diffbot", name:"Diffbot", cat:"ai-training"},
+  {m:"ImagesiftBot", name:"ImagesiftBot", cat:"ai-training"},
+  {m:"ICC-Crawler", name:"ICC-Crawler (NTT)", cat:"ai-training"},
+  {m:"VelenPublicWebCrawler", name:"Velen Public Web Crawler", cat:"ai-training"},
+  {m:"PetalBot", name:"PetalBot (Huawei)", cat:"ai-training"},
+  {m:"Timpibot", name:"Timpibot (Timpi)", cat:"ai-training"},
+  {m:"webzio-extended", name:"Webz.io crawler", cat:"ai-training"},
+  {m:"omgili", name:"Omgili (Webz.io)", cat:"ai-training"},
+  // AI search / answer agents (often acting on behalf of a person asking a question)
+  {m:"OAI-SearchBot", name:"OAI-SearchBot (ChatGPT search)", cat:"ai-agent"},
+  {m:"ChatGPT-User", name:"ChatGPT-User (ChatGPT browsing for a user)", cat:"ai-agent"},
+  {m:"PerplexityBot", name:"PerplexityBot (Perplexity search)", cat:"ai-agent"},
+  {m:"Perplexity-User", name:"Perplexity-User (Perplexity fetching for a user)", cat:"ai-agent"},
+  {m:"Claude-User", name:"Claude-User (Claude fetching for a user)", cat:"ai-agent"},
+  {m:"Claude-SearchBot", name:"Claude-SearchBot (Claude search)", cat:"ai-agent"},
+  {m:"MistralAI-User", name:"MistralAI-User (Mistral fetching for a user)", cat:"ai-agent"},
+  {m:"YouBot", name:"YouBot (You.com)", cat:"ai-agent"},
+  {m:"FacebookBot", name:"FacebookBot (Meta)", cat:"ai-agent"},
+  {m:"Meta-ExternalFetcher", name:"Meta-ExternalFetcher (Meta link fetcher)", cat:"ai-agent"},
+  {m:"DuckAssistBot", name:"DuckAssistBot (DuckDuckGo AI)", cat:"ai-agent"},
+  {m:"ExaBot", name:"ExaBot (Exa search)", cat:"ai-agent"},
+  // Classic search engines
+  {m:"Googlebot", name:"Googlebot (Google Search)", cat:"search"},
+  {m:"bingbot", name:"Bingbot (Microsoft Bing)", cat:"search"},
+  {m:"DuckDuckBot", name:"DuckDuckBot", cat:"search"},
+  {m:"Baiduspider", name:"Baiduspider (Baidu)", cat:"search"},
+  {m:"YandexBot", name:"YandexBot", cat:"search"},
+  {m:"SeznamBot", name:"SeznamBot", cat:"search"},
+  // SEO / commercial crawlers
+  {m:"AhrefsBot", name:"AhrefsBot (Ahrefs)", cat:"seo"},
+  {m:"SemrushBot", name:"SemrushBot (Semrush)", cat:"seo"},
+  {m:"DotBot", name:"DotBot (Moz)", cat:"seo"},
+  {m:"MJ12bot", name:"MJ12bot (Majestic)", cat:"seo"}
+];
+var SIGNAL_CAT_LABELS = {
+  "ai-training":"AI training crawlers",
+  "ai-agent":"AI agents fetching for users",
+  "search":"Search engines",
+  "seo":"SEO and commercial crawlers",
+  "other":"Other automated clients"
+};
+
+// Signal Traffic engine: parse server logs in the browser, find AI agents and crawlers, report what they read.
+// No network calls. Everything happens in this tab.
+var SignalTraffic = (function(){
+  function matchBot(ua){
+    if(!ua) return null;
+    for(var i=0;i<SIGNAL_BOTS.length;i++){
+      if(ua.toLowerCase().indexOf(SIGNAL_BOTS[i].m.toLowerCase()) !== -1) return SIGNAL_BOTS[i];
+    }
+    if(/bot|crawler|spider|scraper|agent/i.test(ua)) return {m:"", name:"Unclassified bot", cat:"other"};
+    return null;
+  }
+  // CLF / combined: 1.2.3.4 - - [10/Oct/2026:13:55:36 +0000] "GET /path HTTP/1.1" 200 1234 "ref" "UA"
+  var CLF = /^\S+\s+\S+\s+\S+\s+\[([^\]]+)\]\s+"([A-Z]+)\s+(\S+?)(?:\s+HTTP\/[\d.]+)?"\s+(\d{3})\s+\S+(?:\s+"[^"]*"\s+"([^"]*)")?/;
+  function parseJsonLine(line){
+    var o; try{ o = JSON.parse(line); }catch(e){ return null; }
+    if(typeof o !== "object" || !o) return null;
+    var ua = o.userAgent || o.user_agent || o.ua || o.ClientRequestUserAgent ||
+             (o.http && (o.http.user_agent || o.http.userAgent)) || o.agent || null;
+    var path = o.path || o.uri || o.url || o.ClientRequestPath || o.request_uri ||
+               (o.http && (o.http.uri || o.http.path || o.http.url)) || null;
+    var status = o.status || o.status_code || o.code || o.EdgeResponseStatus ||
+                 (o.http && (o.http.status_code || o.http.status)) || null;
+    var ts = o.timestamp || o.time || o.ts || o.EdgeStartTimestamp || o.datetime || null;
+    if(!ua && !path) return null;
+    if(path){ try{ path = String(path); var u = path.indexOf("://")>-1 ? new URL(path).pathname : path.split("?")[0]; path = u; }catch(e){} }
+    return {ua: ua ? String(ua) : "", path: path ? String(path) : "(unknown path)", status: status ? parseInt(status,10) : null, ts: ts ? String(ts) : null};
+  }
+  function parseLine(line){
+    line = line.trim();
+    if(!line) return null;
+    if(line[0] === "{"){ var j = parseJsonLine(line); if(j) return j; }
+    var m = line.match(CLF);
+    if(m) return {ua: m[5] || "", path: m[3].split("?")[0], status: parseInt(m[4],10), ts: m[1]};
+    // fallback: find "METHOD /path" and use the last quoted string as UA
+    var r = line.match(/"([A-Z]+)\s+(\S+?)(?:\s+HTTP\/[\d.]+)?"\s+(\d{3})/);
+    if(r){
+      var quotes = line.match(/"([^"]*)"/g) || [];
+      var uaq = quotes.length ? quotes[quotes.length-1].slice(1,-1) : "";
+      return {ua: uaq, path: r[2].split("?")[0], status: parseInt(r[3],10), ts: null};
+    }
+    return {unparsed:true};
+  }
+  function parse(text){
+    var lines = text.split(/\r?\n/), recs = [], unparsed = 0;
+    for(var i=0;i<lines.length;i++){
+      var r = parseLine(lines[i]);
+      if(!r) continue;
+      if(r.unparsed){ unparsed++; continue; }
+      recs.push(r);
+    }
+    return {records: recs, unparsed: unparsed, lines: lines.length};
+  }
+  function analyze(records){
+    var bots = {}, total = 0, botHits = 0, paths = {};
+    records.forEach(function(r){
+      total++;
+      var b = matchBot(r.ua);
+      if(!b) return;
+      botHits++;
+      var k = b.name;
+      if(!bots[k]) bots[k] = {name:b.name, cat:b.cat, hits:0, statuses:{}, paths:{}, first:null, last:null, sampleUA:r.ua};
+      var s = bots[k];
+      s.hits++;
+      if(r.status) s.statuses[r.status] = (s.statuses[r.status]||0)+1;
+      if(r.path){ s.paths[r.path] = (s.paths[r.path]||0)+1; paths[r.path] = (paths[r.path]||0)+1; }
+      if(r.ts){ if(!s.first || r.ts < s.first) s.first = r.ts; if(!s.last || r.ts > s.last) s.last = r.ts; }
+    });
+    var list = Object.keys(bots).map(function(k){ return bots[k]; }).sort(function(a,b){ return b.hits - a.hits; });
+    function top(obj, n){ return Object.keys(obj).map(function(k){ return [k, obj[k]]; }).sort(function(a,b){ return b[1]-a[1]; }).slice(0, n||25); }
+    var byCat = {};
+    list.forEach(function(b){ (byCat[b.cat] = byCat[b.cat] || []).push(b); });
+    return {total: total, botHits: botHits, bots: list, byCat: byCat, topPaths: top(paths, 25),
+            top: function(obj,n){ return top(obj,n); }};
+  }
+  return {parse: parse, analyze: analyze, matchBot: matchBot};
+})();
+if(typeof module !== "undefined") module.exports = SignalTraffic;
+
+</script>
+<script>
+(function(){
+const PRO = true;
+const FREE_MAX_LINES = 2000, FREE_MAX_BYTES = 512*1024;
+const $ = id => document.getElementById(id);
+const theme = localStorage.getItem('st-theme'); if(theme) document.documentElement.dataset.theme = theme;
+$('toggle').addEventListener('click',()=>{ const d=document.documentElement; d.dataset.theme = d.dataset.theme==='dark'?'light':'dark'; localStorage.setItem('st-theme', d.dataset.theme); });
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function readFile(input){ return new Promise((res,rej)=>{ const f=input.files[0]; if(!f){res(null);return;} const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsText(f); }); }
+function buildReport(text){
+  let note = '';
+  if(!PRO){
+    if(text.length > FREE_MAX_BYTES){ text = text.slice(0, FREE_MAX_BYTES); note = 'Free preview reads the first 512 KB only. '; }
+    let lines = text.split(/\r?\n/);
+    if(lines.length > FREE_MAX_LINES){ text = lines.slice(0, FREE_MAX_LINES).join('\n'); note = 'Free preview reads the first 2,000 log lines only. '; }
+  }
+  const parsed = SignalTraffic.parse(text);
+  const a = SignalTraffic.analyze(parsed.records);
+  render(a, parsed, note);
+}
+function statusMix(st){ const ks=Object.keys(st).sort(); return ks.map(k=>esc(k)+' &times;'+st[k]).join(', '); }
+function render(a, parsed, note){
+  const el=$('results'); let h='';
+  if(parsed.unparsed) h+='<p class="err">'+parsed.unparsed+' line(s) could not be read and were skipped.</p>';
+  if(a.total===0){ el.innerHTML='<div class="card"><p class="err">No log lines found. Check the format: one visit per line, Apache/nginx combined or JSON.</p></div>'; return; }
+  h+='<div class="card">';
+  if(note) h+='<p class="mut" style="font-size:13px">'+esc(note)+ (PRO?'':'<a href="__CHECKOUT_URL__" style="color:var(--acc)">The full report has no limit.</a>')+'</p>';
+  h+='<p><b>'+a.total+'</b> requests read. <b>'+a.botHits+'</b> of them ('+(a.total?Math.round(a.botHits/a.total*100):0)+'%) came from <b>'+a.bots.length+'</b> known AI or search agents.</p>';
+  if(!a.bots.length){
+    h+='<p>No known AI or search crawlers in this log. Either none visited in the window this log covers, or they identify differently. Signal Check can tell you whether your site is even letting them in: <a style="color:var(--acc)" href="https://shuttlewright-ai-visibility-checker.pillar-3a8.workers.dev/">run the free scan</a>.</p>';
+  } else {
+    const cats = ["ai-agent","ai-training","search","seo","other"];
+    cats.forEach(cat=>{
+      const list = a.byCat[cat]; if(!list) return;
+      const showN = PRO ? list.length : Math.min(list.length, 5);
+      h+='<h2 style="margin-top:22px">'+esc(SIGNAL_CAT_LABELS[cat]||cat)+' <span class="mut" style="font-weight:400;font-size:14px">'+list.reduce((s,b)=>s+b.hits,0)+' hits</span></h2>';
+      h+='<table><tr><th>Agent</th><th>Hits</th><th>Most-read pages</th><th>Status codes</th><th>Seen</th></tr>';
+      list.slice(0, showN).forEach(b=>{
+        const tp = a.top(b.paths, PRO?10:5).map(p=>'<code>'+esc(p[0])+'</code> &times;'+p[1]).join('<br>');
+        const seen = (b.first? esc(b.first):'?')+' &rarr; '+(b.last?esc(b.last):'?');
+        h+='<tr><td><b>'+esc(b.name)+'</b><br><span class="mut" style="font-size:12px">'+esc(b.sampleUA).slice(0,90)+'</span></td><td>'+b.hits+'</td><td>'+tp+'</td><td>'+statusMix(b.statuses)+'</td><td style="font-size:12px">'+seen+'</td></tr>';
+      });
+      h+='</table>';
+      if(!PRO && list.length > showN) h+='<p class="mut" style="font-size:13px">+ '+(list.length-showN)+' more in the full report.</p>';
+    });
+    h+='<h2 style="margin-top:22px">The pages agents read most</h2><table><tr><th>Page</th><th>Agent hits</th></tr>';
+    a.topPaths.slice(0, PRO?25:10).forEach(p=>{ h+='<tr><td><code>'+esc(p[0])+'</code></td><td>'+p[1]+'</td></tr>'; });
+    h+='</table>';
+    if(!PRO && a.topPaths.length > 10) h+='<p class="mut" style="font-size:13px">+ '+(a.topPaths.length-10)+' more pages in the full report.</p>';
+  }
+  h+='<p class="mut" style="font-size:13px">This report shows what your logs record. It does not estimate traffic your server never saw.</p></div>';
+  if(PRO){
+    h+='<div class="card noprint"><p><button id="csv">Export agent table (CSV)</button> <button class="ghost" id="json">Export full data (JSON)</button> <button class="ghost" onclick="window.print()">Print / save as PDF</button></p><p class="mut" style="font-size:13px">The printed page is the report you can send to your team or your board.</p></div>';
+  }
+  el.innerHTML = h;
+  if(PRO){
+    $('csv').addEventListener('click',()=>{
+      let rows=[["agent","category","hits","statuses","top_pages"]];
+      a.bots.forEach(b=>{ rows.push([b.name,b.cat,b.hits,JSON.stringify(b.statuses),a.top(b.paths,5).map(p=>p[0]+' x'+p[1]).join('; ')]); });
+      dl('agent-traffic-report.csv', rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n'),'text/csv');
+    });
+    $('json').addEventListener('click',()=>{ dl('agent-traffic-report.json', JSON.stringify({total:a.total,botHits:a.botHits,bots:a.bots,topPaths:a.topPaths},null,2),'application/json'); });
+  }
+}
+function dl(name, content, mime){ const b=new Blob([content],{type:mime}); const u=URL.createObjectURL(b); const l=document.createElement('a'); l.href=u; l.download=name; l.click(); URL.revokeObjectURL(u); }
+$('run').addEventListener('click', async ()=>{
+  const f = await readFile($('fLog'));
+  const t = f || $('tLog').value;
+  if(!t || !t.trim()){ $('results').innerHTML='<div class="card"><p class="err">Give it a log file or paste some lines first.</p></div>'; return; }
+  try{ buildReport(t); }catch(e){ $('results').innerHTML='<div class="card"><p class="err">'+esc(e.message)+'</p></div>'; }
+});
+$('sample').addEventListener('click', async ()=>{
+  try{ const t = await fetch('samples/sample.log').then(r=>r.text()); buildReport(t); }
+  catch(e){ $('results').innerHTML='<div class="card"><p class="err">Sample load failed: '+esc(e.message)+'</p></div>'; }
+});
+})();
+</script></body></html>
