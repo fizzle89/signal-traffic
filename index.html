@@ -14,7 +14,9 @@ button,.btn{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:
 button:disabled{opacity:.5;cursor:default}.ghost{background:transparent;color:var(--acc);border:1px solid var(--acc)}
 textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:8px;padding:10px;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--card);color:var(--ink)}
 input[type=file]{display:block;margin:6px 0 12px;font-size:14px}
-table{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0}
+table{border-collapse:collapse;width:100%;min-width:540px;font-size:14px;margin:10px 0}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+td,th{overflow-wrap:anywhere}
 th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}th{background:var(--chip)}
 code{background:var(--chip);padding:1px 5px;border-radius:4px;font-size:13px}
 ul{padding-left:20px}li{margin:4px 0}
@@ -243,18 +245,18 @@ function render(a, parsed, note){
       const list = a.byCat[cat]; if(!list) return;
       const showN = PRO ? list.length : Math.min(list.length, 5);
       h+='<h2 style="margin-top:22px">'+esc(SIGNAL_CAT_LABELS[cat]||cat)+' <span class="mut" style="font-weight:400;font-size:14px">'+list.reduce((s,b)=>s+b.hits,0)+' hits</span></h2>';
-      h+='<table><tr><th>Agent</th><th>Hits</th><th>Most-read pages</th><th>Status codes</th><th>Seen</th></tr>';
+      h+='<div class="tw"><table><tr><th>Agent</th><th>Hits</th><th>Most-read pages</th><th>Status codes</th><th>Seen</th></tr>';
       list.slice(0, showN).forEach(b=>{
         const tp = a.top(b.paths, PRO?10:5).map(p=>'<code>'+esc(p[0])+'</code> &times;'+p[1]).join('<br>');
         const seen = (b.first? esc(b.first):'?')+' &rarr; '+(b.last?esc(b.last):'?');
         h+='<tr><td><b>'+esc(b.name)+'</b><br><span class="mut" style="font-size:12px">'+esc(b.sampleUA).slice(0,90)+'</span></td><td>'+b.hits+'</td><td>'+tp+'</td><td>'+statusMix(b.statuses)+'</td><td style="font-size:12px">'+seen+'</td></tr>';
       });
-      h+='</table>';
+      h+='</table></div>';
       if(!PRO && list.length > showN) h+='<p class="mut" style="font-size:13px">+ '+(list.length-showN)+' more in the full report.</p>';
     });
-    h+='<h2 style="margin-top:22px">The pages agents read most</h2><table><tr><th>Page</th><th>Agent hits</th></tr>';
+    h+='<h2 style="margin-top:22px">The pages agents read most</h2><div class="tw"><table><tr><th>Page</th><th>Agent hits</th></tr>';
     a.topPaths.slice(0, PRO?25:10).forEach(p=>{ h+='<tr><td><code>'+esc(p[0])+'</code></td><td>'+p[1]+'</td></tr>'; });
-    h+='</table>';
+    h+='</table></div>';
     if(!PRO && a.topPaths.length > 10) h+='<p class="mut" style="font-size:13px">+ '+(a.topPaths.length-10)+' more pages in the full report.</p>';
   }
   h+='<p class="mut" style="font-size:13px">This report shows what your logs record. It does not estimate traffic your server never saw.</p></div>';
