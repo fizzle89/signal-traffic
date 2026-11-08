@@ -345,7 +345,7 @@ $('run').addEventListener('click', async ()=>{
   try{ buildReport(t); }catch(e){ $('results').innerHTML='<div class="card"><p class="err">'+esc(e.message)+'</p></div>'; }
 });
 $('sample').addEventListener('click', async ()=>{
-  try{ const t = await fetch('samples/sample.log').then(r=>r.text()); buildReport(t); }
+  try{ const r = await fetch('samples/sample.log'); if(!r.ok) throw new Error('sample not available (HTTP '+r.status+')'); const t = await r.text(); $('tLog').value = t; buildReport(t); }
   catch(e){ $('results').innerHTML='<div class="card"><p class="err">Sample load failed: '+esc(e.message)+'</p></div>'; }
 });
 })();
