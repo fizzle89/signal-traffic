@@ -1,0 +1,9 @@
+# Signal Traffic
+
+> Signal Traffic reads the server logs you give it, in your browser, and shows which AI crawlers and agents visited your site and which pages each one read. Logs are not uploaded anywhere.
+
+- Page: https://fizzle89.github.io/signal-traffic/
+- Free preview: first 2,000 log lines or 512 KB.
+- Full report: $29 one-time, an offline HTML file with no line limit and CSV/JSON export.
+- Questions: fuseini.metadata@gmail.com
+- Made by Shuttlewright
